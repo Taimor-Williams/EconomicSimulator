@@ -32,7 +32,7 @@ class household():
             if neighbor.currentWealth>0:
                 neighbor.currentWealth-=1
                 self.currentWealth+=1
-            if self.CurrentWealth==0:
+            if self.currentWealth==0:
                 break
                 
     def EndTurn():
@@ -49,17 +49,21 @@ class household():
 
 
 
-def LoopBeginTurn():
+def LoopBeginTurn(economy:set):
     """
     Begin turn for all households in the economey
     """
-    pass
-def LoopAskForHelp():
+    for household in economy:
+        household.BeginTurn()
+def LoopAskForHelp(economy:set):
     """
     Ask households if they want to ask for help
     Check if the currentWealth meets some criteria to ask for help.
     """
-    pass
+    for household in economy:
+        if household.currentWealth<0:
+            household.AskForHelp()
+
 def LoopEndTurn():
     """
     Ends the turn
@@ -68,4 +72,24 @@ def LoopEndTurn():
     pass
 
 
-        
+if __name__ == "__main__":
+    TestHousehold1 = household(2,3)
+    TestHousehold2 = household(3,2)
+    TestHousehold3 = household (2,2)
+    TestHousehold2.AddConnected(TestHousehold1)
+    TestHousehold1.AddConnected(TestHousehold2)
+    economy = {TestHousehold1,TestHousehold2,TestHousehold3}
+    
+    while True:
+        LoopBeginTurn(economy)
+        print(TestHousehold1.currentWealth)
+        print(TestHousehold2.currentWealth)
+        print(TestHousehold3.currentWealth)
+        LoopAskForHelp(economy)
+        print(TestHousehold1.currentWealth)
+        print(TestHousehold2.currentWealth)
+        print(TestHousehold3.currentWealth)
+        query = input("Next turn?")
+        if not input:
+            break
+            
