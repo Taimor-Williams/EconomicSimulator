@@ -38,6 +38,7 @@ class household():
     def EndTurn():
         """
         Get rid of households with negative current wealth.
+        lets go
         """
         pass
     def BeginTurn(self):
