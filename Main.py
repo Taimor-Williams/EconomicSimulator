@@ -12,7 +12,7 @@ class household():
 
     Saftey from rep exposure:
         endowment and consumption can only be changed within the functions 
-        changeEndowment and changeConsumption
+        SetEndowment and SetConsumption
         This protects any client from changing endowment or consumption to a negative value
 
 
@@ -61,8 +61,7 @@ class household():
                 
     def EndTurn():
         """
-        Get rid of households with negative current wealth.
-        lets go
+        If CurrentWealth <0: delete from economey and all households its connected to
         """
         pass
 
@@ -85,6 +84,13 @@ class household():
         sets consumption to value
         """
         self.consumption = value
+        self.CheckRepInvarient()
+    
+    def SetCurrentWealth(self, value: int):
+        """
+        sets currentWealth to value
+        """
+        self.currentWealth = value
         self.CheckRepInvarient()
 
 
