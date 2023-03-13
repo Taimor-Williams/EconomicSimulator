@@ -2,27 +2,50 @@
 class household(): 
     '''
     household class represents a household in an economey
+
+    Abstraction Function:
+        AF(endowment, consumption) = household in an economey with no connections
+
+    Rep invarient:
+        endowment >= 0
+        consumption >= 0
+
+    Saftey from rep exposure:
+        endowment and consumption can only be changed within the functions 
+        changeEndowment and changeConsumption
+        This protects any client from changing endowment or consumption to a negative value
+
+
     '''
 
     def __init__(self, endowment: int, consumption: int):
         self.endowment = endowment
         self.consumption = consumption
         self.currentWealth = 0
-        self.connectedHouseholds = []
+        self.connectedHouseholds = set()
+
+    def CheckRepInvarient(self):
+        assert(self.endowment >= 0, "")
+        assert(self.consumption >= 0, "")
+
     def AddConnected(self,newHousehold):
         """
         Adds the connected households. 
         @parameters: newHousehold cannot be in connected already.
         """
         assert(not newHousehold in self.connectedHouseholds,"newHousehold already in connected.")
-        self.connectedHouseholds.append(newHousehold)
+        self.CheckRepInvarient()
+        self.connectedHouseholds.add(newHousehold)
+
     def DeleteConnected(self,oldHousehold):
         """
         Deletes the connected households.
         @parameters: oldHousehold must be in list already.
         """
         assert(oldHousehold in self.connectedHouseholds,"newHousehold not in connected.")
-        self.connectedHouseholds.delete(oldHousehold)
+        self.CheckRepInvarient()
+        self.connectedHouseholds.remove(oldHousehold)
+
     def AskForHelp(self):
         """
         Ask neighbors for wealth if negative current wealth.
@@ -34,6 +57,7 @@ class household():
                 self.currentWealth+=1
             if self.currentWealth==0:
                 break
+        self.CheckRepInvarient()
                 
     def EndTurn():
         """
@@ -41,11 +65,28 @@ class household():
         lets go
         """
         pass
+
     def BeginTurn(self):
         """
         First, we calculate how much is added or subtracted to the current wealth by endowment minus consumption.
         """
         self.currentWealth = self.endowment-self.consumption
+        self.CheckRepInvarient()
+    
+    def SetEndowment(self, value: int):
+        """
+        sets endowment to value
+        """
+        self.endowment = value
+        self.CheckRepInvarient()
+    
+    def SetConsumption(self, value: int):
+        """
+        sets consumption to value
+        """
+        self.consumption = value
+        self.CheckRepInvarient()
+
 
 
 

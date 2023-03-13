@@ -1,5 +1,5 @@
 import pytest
-import Main
+from Main import *
 
 # test for household
 
