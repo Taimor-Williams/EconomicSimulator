@@ -69,7 +69,7 @@ class household():
         """
         First, we calculate how much is added or subtracted to the current wealth by endowment minus consumption.
         """
-        self.currentWealth = self.endowment-self.consumption
+        self.currentWealth += self.endowment-self.consumption
         self.CheckRepInvarient()
     
     def SetEndowment(self, value: int):
@@ -101,8 +101,10 @@ def LoopBeginTurn(economy:set):
     """
     Begin turn for all households in the economey
     """
+    print("economey: ", economy)
     for household in economy:
         household.BeginTurn()
+
 def LoopAskForHelp(economy:set):
     """
     Ask households if they want to ask for help
@@ -119,24 +121,58 @@ def LoopEndTurn():
     """
     pass
 
+def LoopDeleteHouseholds(economey: set):
+    """
+    Removes households from the economey
+    Removes households from other households connecthousehold
+    @parama economey: set of households
+    """
+
+    # get households to be deleted
+    householdsToBeDeleted = set()
+
+    for household in economey:
+        if household.currentWealth < 0:
+            householdsToBeDeleted.add(household)
+    
+    # remove those households from household.connectedHouseholds
+    for household in economey:
+        if household not in householdsToBeDeleted:
+            for neighbor in household.connectedHouseholds:
+                if neighbor in householdsToBeDeleted:
+                    household.connectedHouseholds.remove(neighbor)
+
+    # remove thos households from economey
+    print("deleted: ", householdsToBeDeleted)
+    print(economey - householdsToBeDeleted)
+    economey = economey - householdsToBeDeleted
+    print(economey)
+    return economey
+
+    
+
+
+
 
 if __name__ == "__main__":
     TestHousehold1 = household(2,3)
     TestHousehold2 = household(3,2)
-    TestHousehold3 = household (2,2)
+    TestHousehold3 = household (1,2)
+    TestHousehold3.SetCurrentWealth(2)
     TestHousehold2.AddConnected(TestHousehold1)
     TestHousehold1.AddConnected(TestHousehold2)
-    economy = {TestHousehold1,TestHousehold2,TestHousehold3}
+    economey = {TestHousehold1,TestHousehold2,TestHousehold3}
     
     while True:
-        LoopBeginTurn(economy)
+        LoopBeginTurn(economey)
         print(TestHousehold1.currentWealth)
         print(TestHousehold2.currentWealth)
         print(TestHousehold3.currentWealth)
-        LoopAskForHelp(economy)
+        LoopAskForHelp(economey)
         print(TestHousehold1.currentWealth)
         print(TestHousehold2.currentWealth)
         print(TestHousehold3.currentWealth)
+        economey = LoopDeleteHouseholds(economey)
         query = input("Next turn?")
         if not input:
             break
