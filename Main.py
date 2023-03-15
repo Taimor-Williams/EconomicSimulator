@@ -145,10 +145,30 @@ def LoopDeleteHouseholds(economey: set):
     # remove thos households from economey
     print("deleted: ", householdsToBeDeleted)
     print(economey - householdsToBeDeleted)
-    economey = economey - householdsToBeDeleted
-    print(economey)
-    return economey
 
+    # assignment operater 
+    # economey = economey - householdsToBeDeleted
+
+    # mutator operator
+    #-=, #difference_update
+    economey -= householdsToBeDeleted
+    
+
+def __eq__(self, other):
+    """
+    value equality
+    """
+    return self.endowment == other.endowment & self.consumption == other.consumption
+    
+def __lt__(self, other):
+    """
+    value equality
+    """
+    pass
+
+
+    # ref equality with is
+    
     
 
 
@@ -165,14 +185,12 @@ if __name__ == "__main__":
     
     while True:
         LoopBeginTurn(economey)
-        print(TestHousehold1.currentWealth)
-        print(TestHousehold2.currentWealth)
-        print(TestHousehold3.currentWealth)
+        for Household in economey:
+            print(Household.currentWealth)
         LoopAskForHelp(economey)
-        print(TestHousehold1.currentWealth)
-        print(TestHousehold2.currentWealth)
-        print(TestHousehold3.currentWealth)
-        economey = LoopDeleteHouseholds(economey)
+        for Household in economey:
+            print(Household.currentWealth)
+        LoopDeleteHouseholds(economey)
         query = input("Next turn?")
         if not input:
             break
