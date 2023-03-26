@@ -1,100 +1,7 @@
-
-class household(): 
-    '''
-    household class represents a household in an economey
-
-    Abstraction Function:
-        AF(endowment, consumption) = household in an economey with no connections
-
-    Rep invarient:
-        endowment >= 0
-        consumption >= 0
-
-    Saftey from rep exposure:
-        endowment and consumption can only be changed within the functions 
-        SetEndowment and SetConsumption
-        This protects any client from changing endowment or consumption to a negative value
-
-
-    '''
-
-    def __init__(self, endowment: int, consumption: int):
-        self.endowment = endowment
-        self.consumption = consumption
-        self.currentWealth = 0
-        self.connectedHouseholds = set()
-
-    def CheckRepInvarient(self):
-        assert(self.endowment >= 0, "")
-        assert(self.consumption >= 0, "")
-
-    def AddConnected(self,newHousehold):
-        """
-        Adds the connected households. 
-        @parameters: newHousehold cannot be in connected already.
-        """
-        assert(not newHousehold in self.connectedHouseholds,"newHousehold already in connected.")
-        self.CheckRepInvarient()
-        self.connectedHouseholds.add(newHousehold)
-
-    def DeleteConnected(self,oldHousehold):
-        """
-        Deletes the connected households.
-        @parameters: oldHousehold must be in list already.
-        """
-        assert(oldHousehold in self.connectedHouseholds,"newHousehold not in connected.")
-        self.CheckRepInvarient()
-        self.connectedHouseholds.remove(oldHousehold)
-
-    def AskForHelp(self):
-        """
-        Ask neighbors for wealth if negative current wealth.
-        In the future, might be different strategies for how/what to ask.
-        """
-        for neighbor in self.connectedHouseholds:
-            if neighbor.currentWealth>0:
-                neighbor.currentWealth-=1
-                self.currentWealth+=1
-            if self.currentWealth==0:
-                break
-        self.CheckRepInvarient()
-                
-    def EndTurn():
-        """
-        If CurrentWealth <0: delete from economey and all households its connected to
-        """
-        pass
-
-    def BeginTurn(self):
-        """
-        First, we calculate how much is added or subtracted to the current wealth by endowment minus consumption.
-        """
-        self.currentWealth += self.endowment-self.consumption
-        self.CheckRepInvarient()
-    
-    def SetEndowment(self, value: int):
-        """
-        sets endowment to value
-        """
-        self.endowment = value
-        self.CheckRepInvarient()
-    
-    def SetConsumption(self, value: int):
-        """
-        sets consumption to value
-        """
-        self.consumption = value
-        self.CheckRepInvarient()
-    
-    def SetCurrentWealth(self, value: int):
-        """
-        sets currentWealth to value
-        """
-        self.currentWealth = value
-        self.CheckRepInvarient()
-
-
-
+from Connections_Module import *
+from Household_Module import *
+from Economey_Module import *
+from Message_Module import *
 
 
 def LoopBeginTurn(economy:set):
@@ -154,17 +61,7 @@ def LoopDeleteHouseholds(economey: set):
     economey -= householdsToBeDeleted
     
 
-def __eq__(self, other):
-    """
-    value equality
-    """
-    return self.endowment == other.endowment & self.consumption == other.consumption
-    
-def __lt__(self, other):
-    """
-    value equality
-    """
-    pass
+
 
 
     # ref equality with is
