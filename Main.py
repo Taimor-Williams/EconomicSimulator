@@ -72,23 +72,25 @@ def LoopDeleteHouseholds(economey: set):
 
 
 if __name__ == "__main__":
-    TestHousehold1 = household(2,3)
-    TestHousehold2 = household(3,2)
-    TestHousehold3 = household (1,2)
-    TestHousehold3.SetCurrentWealth(2)
-    TestHousehold2.AddConnected(TestHousehold1)
-    TestHousehold1.AddConnected(TestHousehold2)
-    economey = {TestHousehold1,TestHousehold2,TestHousehold3}
+    # TestHousehold1 = household(2,3)
+    # TestHousehold2 = household(3,2)
+    # TestHousehold3 = household (1,2)
+    # TestHousehold3.SetCurrentWealth(2)
+    # TestHousehold2.AddConnected(TestHousehold1)
+    # TestHousehold1.AddConnected(TestHousehold2)
+    # economey = {TestHousehold1,TestHousehold2,TestHousehold3}
     
-    while True:
-        LoopBeginTurn(economey)
-        for Household in economey:
-            print(Household.currentWealth)
-        LoopAskForHelp(economey)
-        for Household in economey:
-            print(Household.currentWealth)
-        LoopDeleteHouseholds(economey)
-        query = input("Next turn?")
-        if not input:
-            break
+    # while True:
+    #     LoopBeginTurn(economey)
+    #     for Household in economey:
+    #         print(Household.currentWealth)
+    #     LoopAskForHelp(economey)
+    #     for Household in economey:
+    #         print(Household.currentWealth)
+    #     LoopDeleteHouseholds(economey)
+    #     query = input("Next turn?")
+    #     if not input:
+    #         break]
+
+    testHouse1 = household(-1,1)
             

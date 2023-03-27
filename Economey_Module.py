@@ -10,6 +10,7 @@ class Economey():
 
     """
     def __init__(self) -> None:
+        self.adjacencyGraph: dict["Household": set["Connection"]] = {}
         pass
 
     def checkRep():

@@ -11,5 +11,7 @@ class Message:
     Protection from rep:
         No methods to change anything
     """
-    def __init__(self) -> None:
-        pass
+    def __init__(self, amount: int, origin: "household", destination: "household") -> None:
+        self.amount = amount
+        self.origin = origin
+        self.destination = destination

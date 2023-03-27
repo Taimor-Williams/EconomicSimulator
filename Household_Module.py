@@ -1,3 +1,4 @@
+import copy
 class household(): 
     '''
     household class represents a household in an economey
@@ -18,15 +19,17 @@ class household():
     '''
 
     def __init__(self, endowment: int, consumption: int):
-        self.endowment = endowment
-        self.consumption = consumption
-        self.currentWealth = 0
+        self.endowment: int = endowment
+        self.consumption: int = consumption
+        self.currentWealth: int = 0
+        self.mailBox: set["Message"] = set([])
+        self.CheckRepInvarient()
 
     def CheckRepInvarient(self):
-        assert(self.endowment >= 0, "")
-        assert(self.consumption >= 0, "")
+        assert self.endowment >= 0, "can't have negative endowment"
+        assert self.consumption >= 0, "can't have negative consumption" 
 
-    def sendMessages(self, connections):
+    def sendMessages(self, connections: "Connection"):
         """
         @Param: connections: Set<Connections>
         @Returns: void
@@ -85,7 +88,19 @@ class household():
         """
         self.currentWealth = value
         self.CheckRepInvarient()
-        
+    
+    def getEnodwment(self):
+        return self.endowment
+    
+    def getConsumption(self):
+        return self.consumption
+    
+    def getCurrentWealth(self):
+        return self.currentWealth
+    
+    def getMailBox(self):
+        return copy.deepcopy(self.mailBox)
+    
     # equality operations:  =, >, >=, <, <=
     def __eq__(self, other):
         """
