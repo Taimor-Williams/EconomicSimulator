@@ -93,7 +93,7 @@ class Economey():
         Spec: all households with -CurrentWealth send msgs to households they are connected to 
         """
         for household in self.adjacencyGraph:
-            household.sendMessages()
+            household.sendMessages(self.adjacencyGraph[household])
 
     def respond(self):
         """

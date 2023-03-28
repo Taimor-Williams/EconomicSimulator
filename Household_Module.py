@@ -19,11 +19,12 @@ class household():
 
     '''
 
-    def __init__(self, endowment: int, consumption: int):
+    def __init__(self, endowment: int, consumption: int, id:str = "household0"):
         self.endowment: int = endowment
         self.consumption: int = consumption
         self.currentWealth: int = 0
         self.mailBox: set["Message"] = set([])
+        self.id = id
         self.CheckRepInvarient()
 
     def CheckRepInvarient(self):
@@ -36,8 +37,7 @@ class household():
         @Returns: void
         Spec: if negative currentWealth, send message to all connections 
         """
-        print(connections)
-        if self.currentWealth > 0:
+        if self.currentWealth >= 0:
             return
     
         for connection in connections:
@@ -55,7 +55,20 @@ class household():
         
         implemtation: prob needs a recursive solution or a while loop
         """
-        pass
+
+        while self.currentWealth >0:
+            if self.mailBox:
+                curMessage = self.mailBox.pop()
+                if self.currentWealth - curMessage.amount >= 0:
+                    givenAmount = curMessage.amount
+                else:
+                    givenAmount = self.currentWealth
+                theircurrentAmount = curMessage.origin.currentWealth
+                curMessage.origin.SetCurrentWealth(theircurrentAmount + givenAmount)
+                self.SetCurrentWealth(self.currentWealth- givenAmount)
+            else:
+                break
+
     def calcCurrentWealth(self):
         """
         @ params: void

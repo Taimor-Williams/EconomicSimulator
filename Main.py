@@ -93,12 +93,22 @@ if __name__ == "__main__":
     #         break]
 
     TestEconomey = Economey()
-    TestHousehold = household(2,2)
-    TestEconomey.addHousehold(TestHousehold)
-    TestHousehold1 = household(2,2)
-    TestEconomey.addHousehold(TestHousehold1)
-    TestEconomey.connectHouseholds(TestHousehold, TestHousehold1)
-    TestHousehold.SetCurrentWealth(-1)
-    TestHousehold.sendMessages(TestEconomey.adjacencyGraph[TestHousehold])
-    assert len(TestHousehold1.mailBox) == 1
+    TestHouse = household(2,2, "RothsChild")
+    TestHouse1 = household(2,2, "Monroy")
+    TestHouse2 = household(2,2, "Tesla")
+    TestEconomey.addHousehold(TestHouse)
+    TestEconomey.addHousehold(TestHouse1)
+    TestEconomey.addHousehold(TestHouse2)
+    TestEconomey.connectHouseholds(TestHouse,TestHouse1)
+    TestEconomey.connectHouseholds(TestHouse,TestHouse2)
+    TestEconomey.connectHouseholds(TestHouse1,TestHouse2)
+    TestHouse.SetCurrentWealth(-2)
+    TestHouse1.SetCurrentWealth(1)
+    TestHouse2.SetCurrentWealth(1)
+    TestEconomey.send()
+    TestEconomey.respond()
+    print(TestHouse.getCurrentWealth()) 
+    print(TestHouse1.getCurrentWealth()) 
+    print(TestHouse2.getCurrentWealth())
+
             

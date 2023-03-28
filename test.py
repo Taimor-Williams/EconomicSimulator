@@ -105,9 +105,9 @@ def test_Household_respondMessage_0():
     """
     TestEconomey = Economey()
     TestHousehold = household(2,2)
-    TestEconomey.addHousehold(household)
-    TestHousehold.SetCurrentWealth = -1
-    TestHousehold.sendMessages(TestEconomey.adjacencyGraph(TestHousehold))
+    TestEconomey.addHousehold(TestHousehold)
+    TestHousehold.SetCurrentWealth(-1)
+    TestHousehold.sendMessages(TestEconomey.adjacencyGraph[TestHousehold])
     TestHousehold.respondMessages()
     assert len(TestHousehold.mailBox) == 0
 
@@ -119,10 +119,10 @@ def test_Household_respondMessage_1():
     TestHousehold1.SetCurrentWealth(2)
     TestEconomey.addHousehold(TestHousehold1)
     TestEconomey.connectHouseholds(TestHousehold, TestHousehold1)
-    TestHousehold.SetCurrentWealth = -1
-    TestHousehold.sendMessages(TestEconomey.adjacencyGraph(TestHousehold))
+    TestHousehold.SetCurrentWealth(-1)
+    TestHousehold.sendMessages(TestEconomey.adjacencyGraph[TestHousehold])
     TestEconomey.respond()
-    assert TestHousehold.getCurrentWealth == 0
+    assert TestHousehold.getCurrentWealth() == 0
 
 def test_Household_respondMessage_2():
     TestEconomey = Economey()
@@ -137,6 +137,7 @@ def test_Household_respondMessage_2():
     TestHousehold.SetCurrentWealth(-2)
     TestHousehold1.SetCurrentWealth(1)
     TestHousehold2.SetCurrentWealth(1)
+    TestEconomey.send()
     TestEconomey.respond()
     assert TestHousehold.getCurrentWealth() == 0
 
@@ -219,12 +220,12 @@ def test_Economey_ConnectHousehold_1():
     TestEconomey.connectHouseholds(TestHouse, TestHouse1)
     assert TestEconomey.adjacencyGraph[TestHouse1] == TestEconomey.adjacencyGraph[TestHouse], "both have same connection"
 
-def test_sendMessages_0():
+def test_Economey_sendMessages_0():
     TestEconomey = Economey()
     TestEconomey.send()
     assert TestEconomey.adjacencyGraph == {}
 
-def test_sendMessages_1():
+def test_Economey_sendMessages_1():
     TestEconomey = Economey()
     TestHouse = household(2,2)
     TestHouse1 = household(2,2)
@@ -233,9 +234,9 @@ def test_sendMessages_1():
     TestEconomey.connectHouseholds(TestHouse,TestHouse1)
     TestHouse.SetCurrentWealth(-1)
     TestEconomey.send()
-    assert TestHouse1.mailBox.size == 1
+    assert len(TestHouse1.mailBox) == 1
 
-def test_sendMessages_2():
+def test_Economey_sendMessages_2():
     TestEconomey = Economey()
     TestHouse = household(2,2)
     TestHouse1 = household(2,2)
@@ -248,29 +249,30 @@ def test_sendMessages_2():
     TestEconomey.connectHouseholds(TestHouse1,TestHouse2)
     TestHouse.SetCurrentWealth(-1)
     TestEconomey.send()
-    assert TestHouse1.mailBox.size == 1 & TestHouse2.mailBox.size == 1
+    assert len(TestHouse1.mailBox) == 1 & len(TestHouse2.mailBox) == 1
 
 # open msgs
 
-def test_respondMessages_0():
+def test_Economey_respondMessages_0():
     TestEconomey = Economey()
     TestEconomey.send()
     TestEconomey.respond()
     assert TestEconomey.adjacencyGraph == {}
 
-def test_respondMessages_1():
+def test_Economey_respondMessages_1():
     TestEconomey = Economey()
     TestHouse = household(2,2)
     TestHouse1 = household(2,2)
     TestEconomey.addHousehold(TestHouse)
     TestEconomey.addHousehold(TestHouse1)
     TestEconomey.connectHouseholds(TestHouse,TestHouse1)
+    TestHouse1.SetCurrentWealth(1)
     TestHouse.SetCurrentWealth(-1)
     TestEconomey.send()
     TestEconomey.respond()
-    assert TestHouse1.mailBox.size == 1
+    assert TestHouse.getCurrentWealth() == 0
 
-def test_respondMessages_2():
+def test_Economey_respondMessages_2():
     TestEconomey = Economey()
     TestHouse = household(2,2)
     TestHouse1 = household(2,2)
@@ -281,9 +283,14 @@ def test_respondMessages_2():
     TestEconomey.connectHouseholds(TestHouse,TestHouse1)
     TestEconomey.connectHouseholds(TestHouse,TestHouse2)
     TestEconomey.connectHouseholds(TestHouse1,TestHouse2)
-    TestHouse.SetCurrentWealth(-1)
+    TestHouse.SetCurrentWealth(-2)
+    TestHouse1.SetCurrentWealth(1)
+    TestHouse2.SetCurrentWealth(1)
     TestEconomey.send()
-    assert TestHouse1.mailBox.size == 1 & TestHouse2.mailBox.size == 1
+    TestEconomey.respond()
+    assert TestHouse.getCurrentWealth() == 0 
+    assert TestHouse1.getCurrentWealth() == 0 
+    assert TestHouse2.getCurrentWealth() == 0
 
 # maybe need to revisit this test suite
 
