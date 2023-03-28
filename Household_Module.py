@@ -1,4 +1,5 @@
 import copy
+from Message_Module import *
 class household(): 
     '''
     household class represents a household in an economey
@@ -35,15 +36,17 @@ class household():
         @Returns: void
         Spec: if negative currentWealth, send message to all connections 
         """
-        for neighbor in self.connectedHouseholds:
-            if neighbor.currentWealth>0:
-                neighbor.currentWealth-=1
-                self.currentWealth+=1
-            if self.currentWealth==0:
-                break
-        self.CheckRepInvarient()
+        print(connections)
+        if self.currentWealth > 0:
+            return
+    
+        for connection in connections:
+            other = connection.members - set([self])
+            other = other.pop()
+            newMessage = Message(-self.currentWealth, self, other)
+            other.mailBox.add(newMessage)
 
-    def openMessages(self):
+    def respondMessages(self):
         """
         @ Param: void
         @ Returns:void
@@ -102,6 +105,10 @@ class household():
         return copy.deepcopy(self.mailBox)
     
     # equality operations:  =, >, >=, <, <=
+    def __hash__(self):
+        # print(hash(str(self)))
+        return hash(str(self))
+    
     def __eq__(self, other):
         """
         value equality

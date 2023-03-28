@@ -92,5 +92,13 @@ if __name__ == "__main__":
     #     if not input:
     #         break]
 
-    testHouse1 = household(-1,1)
+    TestEconomey = Economey()
+    TestHousehold = household(2,2)
+    TestEconomey.addHousehold(TestHousehold)
+    TestHousehold1 = household(2,2)
+    TestEconomey.addHousehold(TestHousehold1)
+    TestEconomey.connectHouseholds(TestHousehold, TestHousehold1)
+    TestHousehold.SetCurrentWealth(-1)
+    TestHousehold.sendMessages(TestEconomey.adjacencyGraph[TestHousehold])
+    assert len(TestHousehold1.mailBox) == 1
             

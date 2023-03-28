@@ -62,29 +62,29 @@ def test_SetConsumption_negative():
         TestHousehold.SetConsumption(-1)
 
 
-def test_sendMessage_0():
+def test_Household_sendMessage_0():
     """
     don't know what i should assert here
     """
     TestEconomey = Economey()
     TestHousehold = household(2,2)
-    TestEconomey.addHousehold(household)
-    TestHousehold.SetCurrentWealth = -1
-    TestHousehold.sendMessages(TestEconomey.adjacencyGraph(TestHousehold))
-    assert TestHousehold.mailBox.size == 0
+    TestEconomey.addHousehold(TestHousehold)
+    TestHousehold.SetCurrentWealth(-1)
+    TestHousehold.sendMessages(TestEconomey.adjacencyGraph[TestHousehold])
+    assert len(TestHousehold.mailBox) == 0
 
-def test_sendMessage_1():
+def test_Household_sendMessage_1():
     TestEconomey = Economey()
     TestHousehold = household(2,2)
     TestEconomey.addHousehold(TestHousehold)
     TestHousehold1 = household(2,2)
     TestEconomey.addHousehold(TestHousehold1)
     TestEconomey.connectHouseholds(TestHousehold, TestHousehold1)
-    TestHousehold.SetCurrentWealth = -1
-    TestHousehold.sendMessages(TestEconomey.adjacencyGraph(TestHousehold))
-    assert TestHousehold1.mailBox.size == 1
+    TestHousehold.SetCurrentWealth(-1)
+    TestHousehold.sendMessages(TestEconomey.adjacencyGraph[TestHousehold])
+    assert len(TestHousehold1.mailBox) == 1
 
-def test_sendMessage_2():
+def test_Household_sendMessage_2():
     TestEconomey = Economey()
     TestHousehold = household(2,2)
     TestEconomey.addHousehold(TestHousehold)
@@ -94,12 +94,12 @@ def test_sendMessage_2():
     TestHousehold2 = household(2,2)
     TestEconomey.addHousehold(TestHousehold2)
     TestEconomey.connectHouseholds(TestHousehold, TestHousehold2)
-    TestHousehold.SetCurrentWealth = -1
-    TestHousehold.sendMessages(TestEconomey.adjacencyGraph(TestHousehold))
-    assert TestHousehold1.mailBox.size == 1 & TestHousehold2.mailBox.size == 1
-# OpenMessages
+    TestHousehold.SetCurrentWealth(-1)
+    TestHousehold.sendMessages(TestEconomey.adjacencyGraph[TestHousehold])
+    assert len(TestHousehold1.mailBox) == 1 & len(TestHousehold2.mailBox) == 1
+# respondMessages
 
-def test_openMessage_0():
+def test_Household_respondMessage_0():
     """
     don't know what i should assert here
     """
@@ -108,9 +108,10 @@ def test_openMessage_0():
     TestEconomey.addHousehold(household)
     TestHousehold.SetCurrentWealth = -1
     TestHousehold.sendMessages(TestEconomey.adjacencyGraph(TestHousehold))
-    assert TestHousehold.mailBox.size == 0
+    TestHousehold.respondMessages()
+    assert len(TestHousehold.mailBox) == 0
 
-def test_openMessage_1():
+def test_Household_respondMessage_1():
     TestEconomey = Economey()
     TestHousehold = household(2,2)
     TestEconomey.addHousehold(TestHousehold)
@@ -120,11 +121,10 @@ def test_openMessage_1():
     TestEconomey.connectHouseholds(TestHousehold, TestHousehold1)
     TestHousehold.SetCurrentWealth = -1
     TestHousehold.sendMessages(TestEconomey.adjacencyGraph(TestHousehold))
-    TestHousehold1.openMessages()
-
+    TestEconomey.respond()
     assert TestHousehold.getCurrentWealth == 0
 
-def test_sendMessage_2():
+def test_Household_respondMessage_2():
     TestEconomey = Economey()
     TestHousehold = household(2,2)
     TestEconomey.addHousehold(TestHousehold)
@@ -134,10 +134,10 @@ def test_sendMessage_2():
     TestHousehold2 = household(2,2)
     TestEconomey.addHousehold(TestHousehold2)
     TestEconomey.connectHouseholds(TestHousehold, TestHousehold2)
-    TestHousehold.SetCurrentWealth = -2
-    TestHousehold1.SetCurrentWealth = 1
-    TestHousehold2.SetCurrentWealth = 1
-    TestHousehold.sendMessages(TestEconomey.adjacencyGraph(TestHousehold))
+    TestHousehold.SetCurrentWealth(-2)
+    TestHousehold1.SetCurrentWealth(1)
+    TestHousehold2.SetCurrentWealth(1)
+    TestEconomey.respond()
     assert TestHousehold.getCurrentWealth() == 0
 
 #######################################
@@ -166,13 +166,14 @@ CleanUp():
 """
 
 def test_Economey_checkRep_0():
+    # idk how to assert checkRep doesn't raise an error
     TestEconomey = Economey()
     TestHouse = household(2,2)
     TestHouse1 = household(2,2)
     TestEconomey.addHousehold(TestHouse)
     TestEconomey.addHousehold(TestHouse1)
     TestEconomey.connectHouseholds(TestHouse, TestHouse1)
-    assert TestEconomey.checkRep()
+    assert TestEconomey.checkRep() == None
 
 def test_Economey_checkRep_1():
     TestEconomey = Economey()
@@ -190,7 +191,7 @@ def test_Economey_addHousehould_0():
     TestEconomey = Economey()
     TestHouse = household(2,2)
     TestEconomey.addHousehold(TestHouse)
-    with pytest.raises(AssertionError):
+    with pytest.raises(KeyError):
         TestEconomey.addHousehold(TestHouse)
 
 def test_Economey_addHousehould_1():
@@ -206,7 +207,7 @@ def test_Economey_ConnectHousehold_0():
     TestEconomey.addHousehold(TestHouse)
     TestEconomey.addHousehold(TestHouse1)
     TestEconomey.connectHouseholds(TestHouse, TestHouse1)
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         TestEconomey.connectHouseholds(TestHouse, TestHouse1)
 
 def test_Economey_ConnectHousehold_1():
@@ -216,7 +217,7 @@ def test_Economey_ConnectHousehold_1():
     TestEconomey.addHousehold(TestHouse)
     TestEconomey.addHousehold(TestHouse1)
     TestEconomey.connectHouseholds(TestHouse, TestHouse1)
-    assert TestEconomey[TestHouse1] == TestEconomey[TestHouse], "both have same connection"
+    assert TestEconomey.adjacencyGraph[TestHouse1] == TestEconomey.adjacencyGraph[TestHouse], "both have same connection"
 
 def test_sendMessages_0():
     TestEconomey = Economey()
@@ -299,7 +300,7 @@ def test_cleanUp_0():
     TestEconomey.addHousehold(TestHouse1)
     TestEconomey.connectHouseholds(TestHouse,TestHouse1)
     TestEconomey.cleanUp()
-    assert TestEconomey.adjacencyGraph.keys().size == 2
+    assert len(TestEconomey.adjacencyGraph.keys()) == 2
     assert TestEconomey.adjacencyGraph[TestHouse1] == TestEconomey.adjacencyGraph[TestHouse]
 
 def test_cleanUp_1():
@@ -316,7 +317,7 @@ def test_cleanUp_1():
     TestEconomey.connectHouseholds(TestHouse,TestHouse1)
     TestHouse.SetCurrentWealth(-1)
     TestEconomey.cleanUp()
-    assert TestEconomey.adjacencyGraph.keys().size == 1
+    assert len(TestEconomey.adjacencyGraph.keys()) == 1
     assert TestEconomey.adjacencyGraph[TestHouse1] == set()
 
 def test_cleanUp_2():
@@ -334,7 +335,7 @@ def test_cleanUp_2():
     TestHouse.SetCurrentWealth(-1)
     TestHouse1.SetCurrentWealth(-1)
     TestEconomey.cleanUp()
-    assert TestEconomey.adjacencyGraph == set()
+    assert TestEconomey.adjacencyGraph == {}
 
 
 
