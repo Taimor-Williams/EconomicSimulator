@@ -5,8 +5,9 @@ class household():
     household class represents a household in an economey
 
     Abstraction Function:
-        AF(endowment, consumption, id, currentWealth, mailBox) = the household named id that consumes 
-        consumption units and is given endowment units, that has wealth = to currentWealth and has a mailbox
+        AF(endowment, consumption, id, currentWealth, mailBox, pos) = the household named id that consumes 
+        consumption units and is given endowment units, that has wealth = to currentWealth and has a mailbox, 
+        its pos in the world is a tuple (x,y)
 
     Rep invarient:
         endowment >= 0
@@ -25,6 +26,7 @@ class household():
         self.currentWealth: int = 0
         self.mailBox: set["Message"] = set([])
         self.id = id
+        self.pos = (0,0)
         self.CheckRepInvarient()
 
     def CheckRepInvarient(self):

@@ -2,31 +2,36 @@ from Connections_Module import *
 class Economey():
     """
     Attributes:
-        AdjacencyGraph: Dict<household, Set<Connections>>
+        adjacencyGraph: Dict<household, Set<Connections>>
+        connections: set<connection>
     Abstraction Function:
-        AF(adjacencyGraph) = a community of households represented by adjacencyGraph.keys(). Each household i is connected to the households i !=j in adjacencyGraph[household].
+        AF(adjacencyGraph, connection) = a community of households represented by adjacencyGraph.keys(). 
+        Each household i is connected to the households i !=j in adjacencyGraph[household]. Connections
+        is the set of all unique connections bewteen households within the economey. 
+
+        
     Rep Invariant:
         If Connection(HH_i, HH_J)  in adjacencyGraph[hhj], then the same Connection(HH_i, HH_j) in adjGraph[hhi]
+        all connections in connection are in adjacencyGraph[household]
+
     Protection from rep:
+        connections mutated through add connection
+        adjacencyGraph is mutated through add household, and add connection
 
     """
     def __init__(self) -> None:
         self.adjacencyGraph: dict["Household": set["Connection"]] = {}
+        self.connections: set["connection"] = set()
         
 
     def checkRep(self):
         # every connection is mutual
-        connectionSet = set()
-        for household in self.adjacencyGraph:
-            for connection in self.adjacencyGraph[household]:
-                connectionSet.add(connection)
-        
-        for connection in connectionSet:
+        for connection in self.connections:
             household1, household2 = connection.members
             if connection not in self.adjacencyGraph[household1]:
-                assert False
+                raise AssertionError
             if connection not in self.adjacencyGraph[household2]:
-                assert False
+                raise AssertionError
 
 
 
@@ -69,11 +74,13 @@ class Economey():
         for connection in self.adjacencyGraph[household1]:
             if household0 in connection.members:
                 raise ValueError
+        
 
         newConnection = Connection(1, "type", set([household0,household1]))
 
         self.adjacencyGraph[household0].add(newConnection)
         self.adjacencyGraph[household1].add(newConnection)
+        self.connections.add(newConnection)
         
 
 
@@ -132,4 +139,7 @@ class Economey():
                 if i == len(self.adjacencyGraph[household])-1:
                     self.adjacencyGraph[household] = safeSet
                     break
+                
+        # change connections
+        self.connections = self.connections - removeHouseholdSet
                 

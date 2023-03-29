@@ -8,6 +8,18 @@ circleX = 100
 circleY = 100
 radius = 10
 
+def genPosition(curPositions: set, minDistance: int, boardDimensions: tuple[int,int]):
+    """
+    logic for adding new pos that are a certain distance apart from others
+    should return a tuple(x,y) coordinate
+    1)   can obviously just make a grid an only allow for intersection points on grid like go
+        but want a better solution
+    
+    2)   should also probably be a generator
+    """
+    pass
+
+
 
 class node():
    """
@@ -30,9 +42,8 @@ while active:
         if event.type == pygame.QUIT:
             active = False
 
-#    pygame.draw.circle(window,red,(circleX,circleY),radius) # DRAW CIRCLE
+
     pygame.draw.circle(window,household1.color,household1.pos,household1.radius) # DRAW CIRCLE
     pygame.draw.circle(window,household2.color,household2.pos,household2.radius) # DRAW CIRCLE
     pygame.draw.line(window, blue, household1.pos, household2.pos)
-
     pygame.display.update()
