@@ -164,6 +164,11 @@ OpenMessages():
 CleanUp():
     householdsInEconomey 0, 1, >1
     household.currentWealth <0, >=0
+
+calcPosDistance():
+    special cases
+        - round up
+        - 0
 """
 
 def test_Economey_checkRep_0():
@@ -344,6 +349,19 @@ def test_cleanUp_2():
     TestEconomey.cleanUp()
     assert TestEconomey.adjacencyGraph == {}
 
+### new test i'm adding for 
+
+def test_Economey_calcPosDistance_0():
+    TestEconomey = Economey()
+
+    distance = Economey.calcPosDistance((0,0),(5,5))
+    assert distance == 8
+
+def test_Economey_calcPosDistance_1():
+    TestEconomey = Economey()
+
+    distance = Economey.calcPosDistance((0,0),(0,0))
+    assert distance == 0
 
 
 
