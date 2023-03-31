@@ -1,5 +1,6 @@
 import pygame
 from Main import *
+import time
 
 red = (200,0,0)
 blue = (0,0,255)
@@ -9,16 +10,6 @@ circleY = 100
 radius = 10
 
     
-def genPosition(self, curPositions: set, minDistance: int, boardDimensions: tuple[int,int])-> tuple[int,int]:
-        """
-        logic for adding new pos that are at least 2* raidus distance apart from others positions
-        should return a tuple(x,y) coordinate
-        1)   can obviously just make a grid an only allow for intersection points on grid like go
-            but want a better solution
-        
-        2)   should also probably be a generator
-        """
-
 def drawConnection(connection: Connection, window):
     """
     @params:    connection, 
@@ -46,21 +37,12 @@ def drawHousehold(household: household, window, raidus):
     pygame.draw.circle(window,red,household.pos,radius) 
 
 
-class node():
-   """
-   node on the board
-   """
-   def __init__(self, pos, color = red, radius = 10) -> None:
-        self.pos = pos
-        self.color = color
-        self.radius = radius
-
 
 TestEconomey = Economey()    
 window = pygame.display.set_mode(TestEconomey.size)
 TestEconomey = Economey()
-TestHouse = household(2,2, "RothsChild")
-TestHouse1 = household(2,2, "Monroy")
+TestHouse = household(2,3, "RothsChild")
+TestHouse1 = household(2,4, "Monroy")
 TestHouse2 = household(2,2, "Tesla")
 TestEconomey.addHousehold(TestHouse)
 TestEconomey.addHousehold(TestHouse1)
@@ -68,13 +50,20 @@ TestEconomey.addHousehold(TestHouse2)
 TestEconomey.connectHouseholds(TestHouse,TestHouse1)
 TestEconomey.connectHouseholds(TestHouse,TestHouse2)
 TestEconomey.connectHouseholds(TestHouse1,TestHouse2)
+TestHouse2.SetCurrentWealth(6)
+
+
+
+
 
 active = True
 while active:
+    window.fill((0,0,0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             active = False
-
+    
+    # draw loop 
     for nextHousehold in TestEconomey.adjacencyGraph:
         drawHousehold(nextHousehold,window,TestEconomey.radius)
     
@@ -82,3 +71,11 @@ while active:
         drawConnection(nextConnection, window)
     
     pygame.display.update()
+    #Econ loop
+    TestEconomey.calcWealth()
+    TestEconomey.send()
+    TestEconomey.respond()
+    TestEconomey.cleanUp()
+
+
+    

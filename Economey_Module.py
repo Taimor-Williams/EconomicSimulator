@@ -31,7 +31,7 @@ class Economey():
         
 
     Protection from rep:
-        connections mutated through add connection
+        connections mutated through add connection, cleanUp
         adjacencyGraph is mutated through add household, and add connection
 
     """
@@ -166,7 +166,11 @@ class Economey():
                     break
 
         # change connections
-        self.connections = self.connections - removeHouseholdSet
+        removeConnectionsSet = set()
+        for connection in self.connections:
+            if set(connection.members).intersection(removeHouseholdSet):
+                removeConnectionsSet.add(connection)
+        self.connections = self.connections - removeConnectionsSet
 
         # change positions
         removePostitionsSet = set()

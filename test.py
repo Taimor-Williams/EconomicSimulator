@@ -349,6 +349,24 @@ def test_cleanUp_2():
     TestEconomey.cleanUp()
     assert TestEconomey.adjacencyGraph == {}
 
+def test_cleanUp_3():
+    """
+    2 households in economey that are connected
+    2 has negative currentWealth
+    cleanup should remove all housegholds from economey and connections
+    """
+    TestEconomey = Economey()
+    TestHouse = household(2,2)
+    TestHouse1 = household(2,2)
+    TestEconomey.addHousehold(TestHouse)
+    TestEconomey.addHousehold(TestHouse1)
+    TestEconomey.connectHouseholds(TestHouse,TestHouse1)
+    TestHouse.SetCurrentWealth(-1)
+    TestHouse1.SetCurrentWealth(-1)
+    TestEconomey.cleanUp()
+    assert TestEconomey.adjacencyGraph == {}
+    assert TestEconomey.connections == set()
+
 ### new test i'm adding for 
 
 def test_Economey_calcPosDistance_0():
