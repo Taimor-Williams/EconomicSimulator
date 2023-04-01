@@ -1,5 +1,8 @@
 import pytest
-from Main import *
+from BackEnd.Connections_Module import *
+from BackEnd.Household_Module import *
+from BackEnd.Message_Module import *
+from BackEnd.Economey_Module import *
 
 #######################################
 # testsuite for household

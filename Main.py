@@ -1,100 +1,83 @@
-from Connections_Module import *
-from Household_Module import *
-from Economey_Module import *
-from Message_Module import *
+import os
+import pygame
+from BackEnd.Connections_Module import *
+from BackEnd.Household_Module import *
+from BackEnd.Economey_Module import *
+import time
+from FrontEnd.Button_Module import *
 
 
-def LoopBeginTurn(economy:set):
-    """
-    Begin turn for all households in the economey
-    """
-    print("economey: ", economy)
-    for household in economy:
-        household.BeginTurn()
+# setup constants
+red = (200,0,0)
+blue = (0,0,255)
 
-def LoopAskForHelp(economy:set):
-    """
-    Ask households if they want to ask for help
-    Check if the currentWealth meets some criteria to ask for help.
-    """
-    for household in economy:
-        if household.currentWealth<0:
-            household.AskForHelp()
+circleX = 100
+circleY = 100
+radius = 10
 
-def LoopEndTurn():
-    """
-    Ends the turn
-    Tells households the turn is over
-    """
-    pass
+WINDOW_HEIGHT = 500
+WINDOW_WIDTH = 800
+window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+pygame.display.set_caption('Button Demo')
 
-def LoopDeleteHouseholds(economey: set):
-    """
-    Removes households from the economey
-    Removes households from other households connecthousehold
-    @parama economey: set of households
-    """
+#load button images
+start_img = pygame.image.load(os.path.join('FrontEnd','start_btn.png')).convert_alpha()
+exit_img = pygame.image.load(os.path.join('FrontEnd','exit_btn.png')).convert_alpha()
 
-    # get households to be deleted
-    householdsToBeDeleted = set()
+#create button instances
+start_button = Button(500, 200, start_img, 0.8)
+exit_button = Button(500, 400, exit_img, 0.8)
 
-    for household in economey:
-        if household.currentWealth < 0:
-            householdsToBeDeleted.add(household)
+# game speed
+clock = pygame.time.Clock()
+
+
     
-    # remove those households from household.connectedHouseholds
-    for household in economey:
-        if household not in householdsToBeDeleted:
-            for neighbor in household.connectedHouseholds:
-                if neighbor in householdsToBeDeleted:
-                    household.connectedHouseholds.remove(neighbor)
-
-    # remove thos households from economey
-    print("deleted: ", householdsToBeDeleted)
-    print(economey - householdsToBeDeleted)
-
-    # assignment operater 
-    # economey = economey - householdsToBeDeleted
-
-    # mutator operator
-    #-=, #difference_update
-    economey -= householdsToBeDeleted
+def drawConnection(connection: Connection, window):
+    """
+    @params:    connection, 
+    @params:    window, pygame window
+    @returns:   void
+    specs:  draws a linesegment inside the pygame window, the linesegment had endpoints that 
+            are the postions of the households in connection.members
     
+    """
 
+    arrayMembers = list(connection.members)
+    print(arrayMembers[0].pos, arrayMembers[1].pos)
 
+    pygame.draw.line(window, blue, arrayMembers[0].pos, arrayMembers[1].pos)
 
-
-    # ref equality with is
+def drawHousehold(household: household, window, raidus):
+    """
+    @params:    household, houselhod we are drawing
+    @params:    window, pygame window
+    @returns:   void
+    specs:  draws a circle inside the pygame window, the circle has center at household pos and
+            radius of global radius variable
+    """
     
-    
+    pygame.draw.circle(window,red,household.pos,radius) 
 
+def nextTurn():
+    """
+    specs: handles the backend logic for what a new turn should look like
+    """
+    #Econ loop
+    TestEconomey.calcWealth()
+    TestEconomey.send()
+    TestEconomey.respond()
+    TestEconomey.cleanUp()
 
 
 
 if __name__ == "__main__":
-    # TestHousehold1 = household(2,3)
-    # TestHousehold2 = household(3,2)
-    # TestHousehold3 = household (1,2)
-    # TestHousehold3.SetCurrentWealth(2)
-    # TestHousehold2.AddConnected(TestHousehold1)
-    # TestHousehold1.AddConnected(TestHousehold2)
-    # economey = {TestHousehold1,TestHousehold2,TestHousehold3}
-    
-    # while True:
-    #     LoopBeginTurn(economey)
-    #     for Household in economey:
-    #         print(Household.currentWealth)
-    #     LoopAskForHelp(economey)
-    #     for Household in economey:
-    #         print(Household.currentWealth)
-    #     LoopDeleteHouseholds(economey)
-    #     query = input("Next turn?")
-    #     if not input:
-    #         break]
 
+    TestEconomey = Economey((400,500))    
+    # window = pygame.display.set_mode(TestEconomey.size)
     TestEconomey = Economey()
-    TestHouse = household(2,2, "RothsChild")
-    TestHouse1 = household(2,2, "Monroy")
+    TestHouse = household(2,3, "RothsChild")
+    TestHouse1 = household(2,4, "Monroy")
     TestHouse2 = household(2,2, "Tesla")
     TestEconomey.addHousehold(TestHouse)
     TestEconomey.addHousehold(TestHouse1)
@@ -102,13 +85,34 @@ if __name__ == "__main__":
     TestEconomey.connectHouseholds(TestHouse,TestHouse1)
     TestEconomey.connectHouseholds(TestHouse,TestHouse2)
     TestEconomey.connectHouseholds(TestHouse1,TestHouse2)
-    TestHouse.SetCurrentWealth(-2)
-    TestHouse1.SetCurrentWealth(1)
-    TestHouse2.SetCurrentWealth(1)
-    TestEconomey.send()
-    TestEconomey.respond()
-    print(TestHouse.getCurrentWealth()) 
-    print(TestHouse1.getCurrentWealth()) 
-    print(TestHouse2.getCurrentWealth())
+    TestHouse2.SetCurrentWealth(6)
 
-            
+
+
+
+
+    active = True
+    while active:
+        # draw loop 
+        window.fill((0,0,0))
+        start_button.draw(window)
+        exit_button.draw(window)
+        for nextHousehold in TestEconomey.adjacencyGraph:
+            drawHousehold(nextHousehold,window,TestEconomey.radius)
+        
+        for nextConnection in TestEconomey.connections:
+            drawConnection(nextConnection, window)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                active = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if start_button.isClicked():
+                    nextTurn()
+                if exit_button.isClicked():
+                    print('EXIT')
+
+        pygame.display.update()
+
+
+
+        
