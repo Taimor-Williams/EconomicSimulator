@@ -8,6 +8,8 @@ from FrontEnd.Button_Module import *
 
 
 # setup constants
+
+pygame.init()
 red = (200,0,0)
 blue = (0,0,255)
 
@@ -18,15 +20,15 @@ radius = 10
 WINDOW_HEIGHT = 500
 WINDOW_WIDTH = 800
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.display.set_caption('Button Demo')
+pygame.display.set_caption('Economey Demo')
 
 #load button images
-start_img = pygame.image.load(os.path.join('FrontEnd','start_btn.png')).convert_alpha()
-exit_img = pygame.image.load(os.path.join('FrontEnd','exit_btn.png')).convert_alpha()
+start_img = pygame.image.load(os.path.join('FrontEnd','Next.png')).convert_alpha()
+exit_img = pygame.image.load(os.path.join('FrontEnd','Info.png')).convert_alpha()
 
 #create button instances
-start_button = Button(500, 200, start_img, 0.8)
-exit_button = Button(500, 400, exit_img, 0.8)
+start_button = Button(500, 200, start_img, 0.2)
+exit_button = Button(500, 400, exit_img, 0.2)
 
 # game speed
 clock = pygame.time.Clock()
@@ -69,11 +71,19 @@ def nextTurn():
     TestEconomey.respond()
     TestEconomey.cleanUp()
 
+def DisplayHouseholdInfo(nextHousehold: household, window):
+    """
+    displays information about the household 
+    """
+    # print(nextHousehold.currentWealth)
+    font = pygame.font.SysFont('arial', 50)
+    text = font.render(str(nextHousehold.getCurrentWealth()), True, red)
+    window.blit(text, nextHousehold.pos)
 
 
 if __name__ == "__main__":
 
-    TestEconomey = Economey((400,500))    
+    TestEconomey = Economey((400,300))    
     # window = pygame.display.set_mode(TestEconomey.size)
     TestEconomey = Economey()
     TestHouse = household(2,3, "RothsChild")
@@ -90,18 +100,25 @@ if __name__ == "__main__":
 
 
 
-
+    display = False
     active = True
     while active:
+        clock.tick(30)
         # draw loop 
         window.fill((0,0,0))
+        pygame.draw.line(window, blue, (400,0), (400,500))
         start_button.draw(window)
         exit_button.draw(window)
         for nextHousehold in TestEconomey.adjacencyGraph:
             drawHousehold(nextHousehold,window,TestEconomey.radius)
-        
+            if display:
+                DisplayHouseholdInfo(nextHousehold,window)
         for nextConnection in TestEconomey.connections:
             drawConnection(nextConnection, window)
+        
+        pygame.display.update()
+
+        # event loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 active = False
@@ -109,9 +126,10 @@ if __name__ == "__main__":
                 if start_button.isClicked():
                     nextTurn()
                 if exit_button.isClicked():
-                    print('EXIT')
+                    display = not display
+                        
 
-        pygame.display.update()
+        
 
 
 
