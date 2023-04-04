@@ -33,7 +33,7 @@ class household():
         assert self.endowment >= 0, "can't have negative endowment"
         assert self.consumption >= 0, "can't have negative consumption" 
 
-    def sendMessages(self, connections: "Connection"):
+    def sendMessages(self, connections: set["Connection"]):
         """
         @Param: connections: Set<Connections>
         @Returns: void
@@ -107,7 +107,7 @@ class household():
         self.currentWealth = value
         self.CheckRepInvarient()
     
-    def getEnodwment(self):
+    def getEndowment(self):
         return self.endowment
     
     def getConsumption(self):

@@ -17,8 +17,10 @@ circleX = 100
 circleY = 100
 radius = 10
 
-WINDOW_HEIGHT = 500
-WINDOW_WIDTH = 800
+TestEconomey = Economey((400,600))
+
+WINDOW_HEIGHT = TestEconomey.size[1]
+WINDOW_WIDTH = TestEconomey.size[0]*2
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption('Economey Demo')
 
@@ -27,8 +29,8 @@ start_img = pygame.image.load(os.path.join('FrontEnd','Next.png')).convert_alpha
 exit_img = pygame.image.load(os.path.join('FrontEnd','Info.png')).convert_alpha()
 
 #create button instances
-start_button = Button(500, 200, start_img, 0.2)
-exit_button = Button(500, 400, exit_img, 0.2)
+start_button = Button(TestEconomey.size[0]*1.5, TestEconomey.size[1]*1/3, start_img, 0.2)
+exit_button = Button(TestEconomey.size[0]*1.5, TestEconomey.size[1]*2/3, exit_img, 0.2)
 
 # game speed
 clock = pygame.time.Clock()
@@ -76,19 +78,25 @@ def DisplayHouseholdInfo(nextHousehold: household, window):
     displays information about the household 
     """
     # print(nextHousehold.currentWealth)
-    font = pygame.font.SysFont('arial', 50)
-    text = font.render(str(nextHousehold.getCurrentWealth()), True, red)
-    window.blit(text, nextHousehold.pos)
-
+    position = nextHousehold.pos
+    text_size = 15
+    offset = 10
+    font = pygame.font.SysFont('arial', text_size)
+    text = font.render("Wealth: "+str(nextHousehold.getCurrentWealth()), True, red)
+    window.blit(text, (position[0],position[1]+offset))
+    text = font.render("Endowment: "+str(nextHousehold.getEndowment()), True, red)
+    window.blit(text, (position[0],position[1]+text_size+offset))
+    text = font.render("Consumption: "+str(nextHousehold.getConsumption()), True, red)
+    window.blit(text, (position[0],position[1]+text_size*2+offset))
 
 if __name__ == "__main__":
 
-    TestEconomey = Economey((400,300))    
+    # TestEconomey = Economey((400,300))    
     # window = pygame.display.set_mode(TestEconomey.size)
-    TestEconomey = Economey()
+    
     TestHouse = household(2,3, "RothsChild")
     TestHouse1 = household(2,4, "Monroy")
-    TestHouse2 = household(2,2, "Tesla")
+    TestHouse2 = household(3,2, "Tesla")
     TestEconomey.addHousehold(TestHouse)
     TestEconomey.addHousehold(TestHouse1)
     TestEconomey.addHousehold(TestHouse2)
@@ -106,7 +114,7 @@ if __name__ == "__main__":
         clock.tick(30)
         # draw loop 
         window.fill((0,0,0))
-        pygame.draw.line(window, blue, (400,0), (400,500))
+        pygame.draw.line(window, blue, (TestEconomey.size[0]*1.1,0), (TestEconomey.size[0]*1.1,TestEconomey.size[1]))
         start_button.draw(window)
         exit_button.draw(window)
         for nextHousehold in TestEconomey.adjacencyGraph:
