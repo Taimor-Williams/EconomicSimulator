@@ -1,5 +1,5 @@
 import copy
-from BackEnd.Message_Module import *
+from .Message_Module import *
 class household(): 
     '''
     household class represents a household in an economey

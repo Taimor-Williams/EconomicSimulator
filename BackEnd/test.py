@@ -1,8 +1,14 @@
+import os
+import sys
+
+file_dir = os.path.dirname("BackEnd/test")
+sys.path.append(file_dir)
+
 import pytest
-from BackEnd.Connections_Module import *
-from BackEnd.Household_Module import *
-from BackEnd.Message_Module import *
-from BackEnd.Economey_Module import *
+from .Connections_Module import *
+from .Household_Module import *
+from .Message_Module import *
+from .Economey_Module import *
 
 #######################################
 # testsuite for household

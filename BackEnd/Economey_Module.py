@@ -1,4 +1,4 @@
-from BackEnd.Connections_Module import *
+from .Connections_Module import *
 import math
 from random import randint
 class Economey():
