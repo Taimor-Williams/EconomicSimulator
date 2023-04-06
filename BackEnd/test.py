@@ -40,7 +40,7 @@ def test_checkRep_endowment_negative():
 
 def test_checkRep_endowment_positive():
     TestHousehold1 = household(1,1)
-    assert TestHousehold1.getEnodwment() == 1
+    assert TestHousehold1.getEndowment() == 1
 
 def test_checkRep_consumption_negative():
     with pytest.raises(AssertionError):
@@ -48,12 +48,12 @@ def test_checkRep_consumption_negative():
 
 def test_checkRep_consumption_positive():
     TestHousehold1 = household(1,1)
-    assert TestHousehold1.getEnodwment() == 1
+    assert TestHousehold1.getEndowment() == 1
 
 def test_SetEndowment_positive():
     TestHousehold = household(2,2)
     TestHousehold.SetEndowment(1)
-    assert 1 == TestHousehold.getEnodwment(), "set endowment"
+    assert 1 == TestHousehold.getEndowment(), "set endowment"
 
 def test_SetEndowment_negative():
     TestHousehold = household(2,2)
@@ -305,6 +305,28 @@ def test_Economey_respondMessages_2():
     assert TestHouse.getCurrentWealth() == 0 
     assert TestHouse1.getCurrentWealth() == 0 
     assert TestHouse2.getCurrentWealth() == 0
+
+def test_Economey_respondMessages_3():
+    TestEconomey = Economey()
+    TestHouse = household(2,3, "RothsChild")
+    TestHouse1 = household(3,2, "Monroy")
+    TestEconomey.addHousehold(TestHouse)
+    TestEconomey.addHousehold(TestHouse1)
+    TestEconomey.connectHouseholds(TestHouse,TestHouse1)
+    TestHouse1.SetCurrentWealth(0)
+    
+    def EconLoop():
+            #Econ loop
+        TestEconomey.calcWealth()
+        TestEconomey.send()
+        TestEconomey.respond()
+        TestEconomey.cleanUp()
+    
+    EconLoop()
+    EconLoop()
+    EconLoop()
+    EconLoop()
+    assert len(TestEconomey.adjacencyGraph.keys()) == 2
 
 # maybe need to revisit this test suite
 

@@ -70,6 +70,7 @@ class Economey():
 
         household.pos = self.genPosition()
         self.positions.add(household.pos)
+        household.inEconomey = True
         
 
 
@@ -149,6 +150,7 @@ class Economey():
         for household in self.adjacencyGraph:
             if household.getCurrentWealth() < 0:
                 removeHouseholdSet.add(household)
+                household.inEconomey = False
 
         for key in removeHouseholdSet:
             del self.adjacencyGraph[key]

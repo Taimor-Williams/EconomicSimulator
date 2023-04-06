@@ -35,6 +35,34 @@ exit_button = Button(TestEconomey.size[0]*1.5, TestEconomey.size[1]*2/3, exit_im
 # game speed
 clock = pygame.time.Clock()
 
+def weather(Economey):
+    """
+    @params: Economey
+    @Returns: 
+    @specs: applies a weather effect to the economey. Like a monsoon. In which case all households 
+    inside circle centered at (x,y) with radius z suffer some combination of effect such as. 
+    1) endowment is set to 0 for x turns. 
+    2) currentWealth is reduced sharply 
+    3) consumption becomes much higher for x turns, etc
+
+    would require me to create a new class called conditions which effect households and leave after 
+    a certain amount of time
+    """
+    pass
+
+def guiAddHousehold():
+    """
+    spec: add household to current economey, name randomly generted can be placed anywhere 
+    on the board that doesn't violate economey specs. 
+    """
+    pass
+
+def guiAddConnnection():
+    """
+    spec: add connection between 2 households to the current economey
+    """
+    pass
+
 
     
 def drawConnection(connection: Connection, window):
@@ -88,6 +116,8 @@ def DisplayHouseholdInfo(nextHousehold: household, window):
     window.blit(text, (position[0],position[1]+text_size+offset))
     text = font.render("Consumption: "+str(nextHousehold.getConsumption()), True, red)
     window.blit(text, (position[0],position[1]+text_size*2+offset))
+    text = font.render("ID: "+str(nextHousehold.id), True, red)
+    window.blit(text, (position[0],position[1]+text_size*3+offset))
 
 if __name__ == "__main__":
 
@@ -95,7 +125,7 @@ if __name__ == "__main__":
     # window = pygame.display.set_mode(TestEconomey.size)
     
     TestHouse = household(2,3, "RothsChild")
-    TestHouse1 = household(2,4, "Monroy")
+    TestHouse1 = household(2,3, "Monroy")
     TestHouse2 = household(3,2, "Tesla")
     TestEconomey.addHousehold(TestHouse)
     TestEconomey.addHousehold(TestHouse1)

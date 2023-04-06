@@ -1,5 +1,19 @@
 import copy
 from .Message_Module import *
+import itertools
+
+def genName():
+    nameList = set(["Barlowe",
+                    "Caddel",
+                    "Hart",
+                    "Katz",
+                    "Laurier",
+                    "Madden",
+                    "Elrod",
+                    "Whitlock",])
+    yield from nameList
+    
+
 class household(): 
     '''
     household class represents a household in an economey
@@ -20,13 +34,20 @@ class household():
 
     '''
 
+    nameListGenerator = itertools.cycle(genName())
+
     def __init__(self, endowment: int, consumption: int, id:str = "household0"):
         self.endowment: int = endowment
         self.consumption: int = consumption
         self.currentWealth: int = 0
         self.mailBox: set["Message"] = set([])
-        self.id = id
+        # if id == "household0":
+        #     self.id = self.genName()
+        # else:
+        #     self.id = id
+        self.id = next(household.nameListGenerator)
         self.pos = (0,0)
+        self.inEconomey = False
         self.CheckRepInvarient()
 
     def CheckRepInvarient(self):
@@ -54,13 +75,19 @@ class household():
         @ Returns:void
         Spec: decide who to send money to, The calc should be based on who 
         needs help the most, keep going till you help everyone or your currentWealth reaches 0. 
+        If the messages sender is no longer in the economey ignore it.
         
         implemtation: prob needs a recursive solution or a while loop
+        as a note: the spec is non-deterministic because the msgs in set will appear in random order
+        so sometimes it will respond first to msg's it wouldn't see first otherwise
         """
 
         while self.currentWealth >0:
             if self.mailBox:
                 curMessage = self.mailBox.pop()
+                # case of old message from household that no longer exist 
+                if not curMessage.origin.inEconomey:
+                    continue
                 if self.currentWealth - curMessage.amount >= 0:
                     givenAmount = curMessage.amount
                 else:
@@ -119,6 +146,8 @@ class household():
     def getMailBox(self):
         return copy.deepcopy(self.mailBox)
     
+    def genName():
+        yield from []
     # equality operations:  =, >, >=, <, <=
     def __hash__(self):
         # print(hash(str(self)))
@@ -128,7 +157,7 @@ class household():
         """
         value equality
         """
-        return self.endowment == other.endowment & self.consumption == other.consumption
+        return self.id == other.id
     
     def __lt__(self, other):
         """
