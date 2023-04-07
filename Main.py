@@ -29,8 +29,9 @@ start_img = pygame.image.load(os.path.join('FrontEnd','Next.png')).convert_alpha
 exit_img = pygame.image.load(os.path.join('FrontEnd','Info.png')).convert_alpha()
 
 #create button instances
-start_button = Button(TestEconomey.size[0]*1.5, TestEconomey.size[1]*1/3, start_img, 0.2)
-exit_button = Button(TestEconomey.size[0]*1.5, TestEconomey.size[1]*2/3, exit_img, 0.2)
+start_button = Button(TestEconomey.size[0]*1.5, TestEconomey.size[1]*1/4, start_img, 0.2)
+exit_button = Button(TestEconomey.size[0]*1.5, TestEconomey.size[1]*2/4, exit_img, 0.2)
+add_button =  Button(TestEconomey.size[0]*1.5, TestEconomey.size[1]*3/4, exit_img, 0.2)
 
 # game speed
 clock = pygame.time.Clock()
@@ -50,12 +51,35 @@ def weather(Economey):
     """
     pass
 
-def guiAddHousehold():
+def guiAddHousehold(economey: Economey):
     """
     spec: add household to current economey, name randomly generted can be placed anywhere 
     on the board that doesn't violate economey specs. 
     """
-    pass
+    validPos = True
+    newPos = pygame.mouse.get_pos()
+
+    # position inside economey
+    if newPos[0] < 0 or newPos[0] > economey.size[0]:
+         validPos = False
+    
+    if newPos[1] < 0 or newPos[1] > economey.size[1]:
+         validPos = False
+
+    # position not to close
+    for pos in economey.positions:
+        if Economey.calcPosDistance(newPos, pos) < 2*economey.radius:
+            validPos = False
+    
+    # place
+    if validPos:
+        print("hellow")
+        print(newPos)
+        newHouse = household(2,2)
+        newHouse.pos = newPos
+        economey.addHousehold(newHouse)
+
+
 
 def guiAddConnnection():
     """
@@ -76,7 +100,7 @@ def drawConnection(connection: Connection, window):
     """
 
     arrayMembers = list(connection.members)
-    print(arrayMembers[0].pos, arrayMembers[1].pos)
+    # print(arrayMembers[0].pos, arrayMembers[1].pos)
 
     pygame.draw.line(window, blue, arrayMembers[0].pos, arrayMembers[1].pos)
 
@@ -137,7 +161,7 @@ if __name__ == "__main__":
 
 
 
-
+    add = False
     display = False
     active = True
     while active:
@@ -147,6 +171,7 @@ if __name__ == "__main__":
         pygame.draw.line(window, blue, (TestEconomey.size[0]*1.1,0), (TestEconomey.size[0]*1.1,TestEconomey.size[1]))
         start_button.draw(window)
         exit_button.draw(window)
+        add_button.draw(window)
         for nextHousehold in TestEconomey.adjacencyGraph:
             drawHousehold(nextHousehold,window,TestEconomey.radius)
             if display:
@@ -161,10 +186,16 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 active = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if add:
+                    guiAddHousehold(TestEconomey)
+                    add = not add
                 if start_button.isClicked():
                     nextTurn()
                 if exit_button.isClicked():
                     display = not display
+                if add_button.isClicked():
+                    add = True
+                
                         
 
         

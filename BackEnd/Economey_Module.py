@@ -62,13 +62,25 @@ class Economey():
         @ Params: Household
         @ Returns: void
         Spec: add household to economy, raise error if economey is already in economey
+
+        give household new pos if it's position is to close to others
         """
         if household in self.adjacencyGraph:
             raise KeyError
 
-        self.adjacencyGraph[household] = set()
 
-        household.pos = self.genPosition()
+        # if position is good use it else gen a random pos
+        validPos = True
+        newPos = household.pos
+        for pos in self.positions:
+            if Economey.calcPosDistance(newPos, pos) < 2*self.radius:
+                    validPos = False
+        
+        if not validPos or household.pos == (0,0):
+            household.pos = self.genPosition()
+
+        # actually add to ecomey
+        self.adjacencyGraph[household] = set()
         self.positions.add(household.pos)
         household.inEconomey = True
         
@@ -216,8 +228,6 @@ class Economey():
         y1 = pos0[1]
         y2 = pos1[1]
         distance = math.ceil(((x1-x2)**2+(y1-y2)**2)**0.5)
-        print((x1-x2)**2)
-        print((y1-y2)**2)
         return distance
 
                 
