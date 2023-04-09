@@ -85,7 +85,7 @@ def guiAddConnnection():
     """
     spec: add connection between 2 households to the current economey
     """
-    pass
+    
 
 
     

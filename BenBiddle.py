@@ -32,6 +32,7 @@ def genName():
         yield nameList[value]
         value +=1   
         print(value)
+        
 households = genName()
 print(next(households))
 print(next(households))
